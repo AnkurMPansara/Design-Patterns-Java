@@ -26,6 +26,10 @@ class FileReader {
     private static FileReader instance;
     private final Map<Path, List<String>> fileMap = new HashMap<>();
 
+    private FileReader() {
+        System.out.println("Instance initiated");
+    }
+
     public static synchronized FileReader getFileReader() {
         if (instance == null) {
             instance = new FileReader();
