@@ -3,7 +3,7 @@
 A comprehensive collection of **Design Patterns** implemented in Java. This repository serves as a practical reference for understanding the "Gang of Four" (GoF) patterns and other modern architectural styles through clean, documented, and executable code.
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Build](https://img.shields.io/badge/Build-Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
+![JDK](https://img.shields.io/badge/JDK-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 
 ---
 
