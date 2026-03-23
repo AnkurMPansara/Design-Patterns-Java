@@ -13,22 +13,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class singleton {
+public class Singleton {
     public static void main(String[] args) {
-        fileReader reader1 = fileReader.getFileReader();
+        FileReader reader1 = FileReader.getFileReader();
         System.out.println(reader1.readFile("README.md"));
-        fileReader reader2 = fileReader.getFileReader();
+        FileReader reader2 = FileReader.getFileReader();
         System.out.println(reader2.readFile("README.md"));
     }    
 }
 
-class fileReader {
-    private static fileReader instance;
+class FileReader {
+    private static FileReader instance;
     private final Map<Path, List<String>> fileMap = new HashMap<>();
 
-    public static synchronized fileReader getFileReader() {
+    public static synchronized FileReader getFileReader() {
         if (instance == null) {
-            instance = new fileReader();
+            instance = new FileReader();
         }
         return instance;
     }
