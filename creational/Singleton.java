@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class Singleton {
@@ -24,7 +24,7 @@ public class Singleton {
 
 class FileReader {
     private static FileReader instance;
-    private final Map<Path, List<String>> fileMap = new HashMap<>();
+    private final ConcurrentHashMap<Path, List<String>> fileMap = new ConcurrentHashMap<>();
 
     private FileReader() {
         System.out.println("Instance initiated");
