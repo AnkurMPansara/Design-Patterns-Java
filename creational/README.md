@@ -9,8 +9,8 @@ Most important pattern category, I think. If you dont want to get humiliated at 
 | Pattern | Summary | When to use? |
 | :--- | :--- | :--- |
 | **[Singleton](./Singleton.java)** | Restricts a class to a single instance. | When you need a global state (e.g., Database connection, Logging). |
-| **[Factory Method](./factory)** | Provides an interface for creating objects in a superclass. | When you don't know the exact types and dependencies of the objects beforehand. |
-| **[Abstract Factory](./abstract-factory)** | Produces families of related objects. | When your code needs to work with various families of related products. |
+| **[Factory Method](./Factory.java)** | Provides an interface for creating objects in a superclass. | When you don't know the exact types and dependencies of the objects beforehand. |
+| **[Abstract Factory](./AbstractFactory.java)** | Produces families of related objects. | When your code needs to work with various families of related products. |
 | **[Builder](./builder)** | Construct complex objects step-by-step. | When you have a "telescoping constructor" problem (too many parameters). |
 | **[Prototype](./prototype)** | Copy existing objects without depending on classes. | When the cost of creating a new object is higher than cloning an existing one. |
 
