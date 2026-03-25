@@ -2,10 +2,12 @@
     We got our bob the builder here, the Builder Pattern.
     This one is very simple, It allows you to build an object at your pace that must be contructed at once with all parameters.
     With this builder class you can use polymorphism to support multiple ways of setting a param or leave it as default.
-    This one helps with DRY principle more than SOLID principles.
+    This one helps with DRY principle as well as SOLID principles.
+    Given example is very bad example of request builder, kids. Dont do this at home.
  */
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,18 +17,22 @@ import java.util.stream.Collectors;
 
 public class Builder {
     public static void main(String[] args) {
-        HttpRequest getRequest = new RequestBuilder()
+        Map<String, String> params = new HashMap<>();
+        params.put("id", "42");
+        HttpRequest getRequest = new HttpRequest.RequestBuilder()
                 .setUrl("https://api.example.com/v1/data")
                 .setMethod("GET")
-                .setHeaders(Arrays.asList("Authorization: Bearer TOKEN_123", "Accept: application/json"))
-                .setParams(Collections.singletonMap("id", "42"))
+                .addHeader("Authorization: Bearer TOKEN_123")
+                .addHeader("Accept: application/json")
+                .setParams(params)
+                .addParam("type", "user")
                 .build();
         getRequest.executeRequest();
 
         Map<String, Object> userData = new HashMap<>();
         userData.put("name", "John Doe");
         userData.put("role", "Admin");
-        HttpRequest postRequest = new RequestBuilder()
+        HttpRequest postRequest = new HttpRequest.RequestBuilder()
                 .setUrl("https://api.example.com/v1/users")
                 .setMethod("POST")
                 .setPayload(userData)
@@ -45,18 +51,18 @@ class HttpRequest {
     private final Integer connTimeout;
     private final Integer reqTimeout;
 
-    public HttpRequest(String url, String method, Map<String, String> params, List<String> headers, byte[] payload, Integer connTimeout, Integer reqTimeout) {
-        this.url = url;
-        this.method = method;
-        this.params = params;
-        this.headers = headers;
-        this.payload = payload;
-        this.connTimeout = connTimeout;
-        this.reqTimeout = reqTimeout;
+    private HttpRequest(RequestBuilder builder) {
+        this.url = builder.url;
+        this.method = builder.method;
+        this.params = new HashMap<>(builder.params);
+        this.headers = new ArrayList<>(builder.headers);
+        this.payload = builder.payload != null ? builder.payload.clone() : null;
+        this.connTimeout = builder.connTimeout;
+        this.reqTimeout = builder.reqTimeout;
     }
 
     public void executeRequest() {
-        System.out.println("If you reall think i would really hit this req, high is stupidity in you");
+        System.out.println("If you really think i would really hit this req, high is stupidity in you");
         System.out.println("--- Debugging HttpRequest ---");
         System.out.println("URL: " + url);
         System.out.println("Method: " + method);
@@ -76,63 +82,91 @@ class HttpRequest {
         System.out.println("Request Timeout: " + reqTimeout + "ms");
         System.out.println("-----------------------------");
     }
-}
 
-class RequestBuilder {
-    private String url;
-    private String method;
-    private Map<String, String> params;
-    private List<String> headers;
-    private byte[] payload;
-    private Integer connTimeout = 200;
-    private Integer reqTimeout = 1000; 
+    public static class RequestBuilder {
+        private String url;
+        private String method;
+        private Map<String, String> params = new HashMap<>();
+        private List<String> headers = new ArrayList<>();
+        private byte[] payload;
+        private Integer connTimeout = 200;
+        private Integer reqTimeout = 1000; 
 
-    public RequestBuilder setUrl(String url) {
-        this.url = url;
-        return this;
-    }
+        public RequestBuilder setUrl(String url) {
+            this.url = url;
+            return this;
+        }
 
-    public RequestBuilder setMethod(String method) {
-        this.method = method;
-        return this;
-    }
+        public RequestBuilder setMethod(String method) {
+            this.method = method;
+            return this;
+        }
 
-    public RequestBuilder setParams(Map<String, String> params) {
-        this.params = params;
-        return this;
-    }
+        public RequestBuilder setParams(Map<String, String> params) {
+            this.params = params;
+            return this;
+        }
 
-    public RequestBuilder setHeaders(List<String> headers) {
-        this.headers = headers;
-        return this;
-    }
+        public RequestBuilder addParam(String key, String value) {
+            if (this.params == null) {
+                this.params = new HashMap<>();
+            }
+            this.params.put(key, value);
+            return this;
+        }
 
-    public RequestBuilder setPayload(Map<String, Object> payload) {
-        String json = "{" + payload.entrySet().stream()
-            .map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"")
-            .collect(Collectors.joining(",")) + "}";
-        this.payload = json.getBytes(StandardCharsets.UTF_8);
-        return this;
-    }
+        public RequestBuilder setHeaders(List<String> headers) {
+            this.headers = headers;
+            return this;
+        }
 
-    public RequestBuilder setPayload(String payload) {
-        this.payload = payload.getBytes(StandardCharsets.UTF_8);
-        return this;
-    }
+        public RequestBuilder addHeader(String header) {
+            if (this.headers == null) {
+                this.headers = new ArrayList<>();
+            }
+            this.headers.add(header);
+            return this;
+        }
 
-    public RequestBuilder setTimeout(Integer connTimeout, Integer reqTimeout) {
-        this.connTimeout = connTimeout;
-        this.reqTimeout = reqTimeout;
-        return this;
-    }
+        public RequestBuilder setPayload(Map<String, Object> payload) {
+            //I am not gonna use a external library for simple example, if code breaks due to edge case, thats on you.
+            String json = "{" + payload.entrySet().stream()
+                .map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"")
+                .collect(Collectors.joining(",")) + "}";
+            this.payload = json.getBytes(StandardCharsets.UTF_8);
+            return this;
+        }
 
-    public RequestBuilder setTimeout(Integer timeout) {
-        this.connTimeout = timeout;
-        this.reqTimeout = timeout;
-        return this;
-    }
+        public RequestBuilder setPayload(String payload) {
+            this.payload = payload.getBytes(StandardCharsets.UTF_8);
+            return this;
+        }
 
-    public HttpRequest build() {
-        return new HttpRequest(url, method, params, headers, payload, connTimeout, reqTimeout);
+        public RequestBuilder setPayload(byte[] payload) {
+            this.payload = payload;
+            return this;
+        } 
+
+        public RequestBuilder setTimeout(Integer connTimeout, Integer reqTimeout) {
+            this.connTimeout = connTimeout;
+            this.reqTimeout = reqTimeout;
+            return this;
+        }
+
+        public RequestBuilder setTimeout(Integer timeout) {
+            this.connTimeout = timeout;
+            this.reqTimeout = timeout;
+            return this;
+        }
+
+        public HttpRequest build() {
+            if (this.url == null || this.url.trim().isEmpty()) {
+                throw new IllegalStateException("Building HTTP request without url, are we?");
+            }
+            if (this.method == null || this.method.trim().isEmpty()) {
+                throw new IllegalStateException("You forgot to set method");
+            }
+            return new HttpRequest(this);
+        }
     }
 }
