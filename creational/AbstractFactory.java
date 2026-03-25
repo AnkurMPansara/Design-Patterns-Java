@@ -1,7 +1,7 @@
 /*
-    Extension of factory pattern, This one is so confusing that i cant even think of any quip on it
-    If I were to compare this to regular factory, difference is this one is interface of object, not method
-    You can view this as the format a factory must follow in order to become multipurpose and not just wrapper
+    Extension of factory pattern, This one is so confusing that i cant even think of any quip on it.
+    If I were to compare this to regular factory, difference is this one is interface of object, not method.
+    You can view this as the format a factory must follow in order to become multipurpose and not just wrapper.
     This pattern is the peak implementation of abstraction, there is nothing concrete in abstract factory.
  */
 
