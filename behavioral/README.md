@@ -10,7 +10,7 @@ To be honest, only Strategy and Observer patterns matter, rest are either too ni
 | :--- | :--- | :--- |
 | **[Chain of Responsibility](./ChainOfResponsibility.java)** | Passes a request along a chain of handlers. | Middleware, logging levels, or multi-stage form validation. |
 | **[Command](./Command.java)** | Turns a request into a stand-alone object. | Implementation of "Undo/Redo" buttons or task queuing. |
-| **[Iterator](./iterator)** | Accesses elements of a collection without exposing its logic. | When you want to loop through a custom Data Structure without breaking it. |
+| **[Iterator](./Iterater.java)** | Accesses elements of a collection without exposing its logic. | When you want to loop through a custom Data Structure without breaking it. |
 | **[Mediator](./mediator)** | Restricts direct communications between objects. | Chat rooms or Air Traffic Control—stop objects from talking to everyone at once. |
 | **[Memento](./memento)** | Saves and restores the previous state of an object. | Checkpoints in a game or "Save State" functionality. |
 | **[Observer](./observer)** | Notifies multiple objects about events. | The classic Pub/Sub. When a YouTube creator uploads, the subscribers get hit. |
